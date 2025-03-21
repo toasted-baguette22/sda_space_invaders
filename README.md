@@ -23,6 +23,3 @@ Refer to the [documentation](https://github.com/m4mbo/space-invaders/tree/main/d
 ``` 
 ./run.sh
 ```
-## Credits
-
-* [m4mbo](https://github.com/m4mbo) - Code and pixel art.

@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 // panel class that inherits panel methods and implements the event key listener class, as well as the runnable class to create a thread
 
-public class SpacePanel extends JPanel implements Runnable, KeyListener{
+public class SpacePanel extends JPanel implements Runnable, KeyListener, GameObserver{
 	
 	private static final int PANEL_WIDTH = 600;											// panel
 	private static final int PANEL_HEIGHT = 700;										// dimensions
@@ -44,17 +44,17 @@ public class SpacePanel extends JPanel implements Runnable, KeyListener{
 	    addKeyListener(this);															// adding a key listener
 	    setFocusable(true);																// setting focusable to true to receive keyboard input
 	    
-	    backgroundImage = new ImageIcon("../res/starrysky.png").getImage();				// creating a new background image with png file
-	    title = new ImageIcon("../res/Title.png").getImage();							// creating a new title image with png file
-	    gameover = new ImageIcon("../res/Gameover.png").getImage();						// creating a new game over image with png file
+	    backgroundImage = ResourceManager.getInstance().getImage("background");				// getting background image from ResourceManager
+	    title = ResourceManager.getInstance().getImage("title");							// getting title image from ResourceManager
+	    gameover = ResourceManager.getInstance().getImage("gameover");						// getting game over image from ResourceManager
 	    
 	    score = new Score();															// initializing new score object
-	    lives = new Lives(new ImageIcon("../res/Heart.png").getImage());				// creating a new lives object with heart png file as parameter
+	    lives = new Lives(ResourceManager.getInstance().getImage("heart"));				// getting heart image from ResourceManager
 	    
-	    player = new Player((PANEL_WIDTH/2) - 30, (PANEL_HEIGHT - 65), 10, new ImageIcon("../res/Player.png").getImage());			// creating a new player with its position and png file
+	    player = EntityFactory.createPlayer((PANEL_WIDTH/2) - 30, (PANEL_HEIGHT - 65), 10);			// creating a new player using Factory
 	    lasergun = new LaserGun();														// creating new laser gun
 	    bomblauncher = new BombLauncher();												// creating new bomb launcher
-	    alienhorde = new AlienHorde(new ImageIcon("../res/Alien.gif").getImage());		// creating new alien horde with alien gif file
+	    alienhorde = new AlienHorde();		// creating new alien horde
 	   
 	    
 	    gameThread = new Thread(this);													// create and
@@ -128,7 +128,7 @@ public class SpacePanel extends JPanel implements Runnable, KeyListener{
 		// checking if both player and aliens have collided
 		
 		alienhorde.checkCollision(lasergun, score);
-		player.checkCollision(alienhorde, bomblauncher, this, lives);
+		player.checkCollision(alienhorde, bomblauncher, this, PANEL_WIDTH, PANEL_HEIGHT);
 	}
 	
 	// run method that handles 60 frames per second
@@ -186,7 +186,7 @@ public class SpacePanel extends JPanel implements Runnable, KeyListener{
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {								// if released space, shoot
 			
-			lasergun.addLaser(new Laser(player.x+15, player.y-5, 5, 3, 5));		// add laser to linked list
+			lasergun.addLaser(EntityFactory.createLaser(player.x+15, player.y-5, 5, 3, 5));		// add laser to linked list
 		}
 		
 		if (e.getKeyCode() == KeyEvent.VK_S) {
@@ -209,4 +209,14 @@ public class SpacePanel extends JPanel implements Runnable, KeyListener{
 		this.gameOver = gameOver;
 	}
 
+	// GameObserver methods
+	@Override
+	public void onGameOver() {
+		this.gameOver = true;
+	}
+
+	@Override
+	public void onPlayerHit() {
+		lives.takeLife();
+	}
 }

@@ -99,7 +99,7 @@ public class Alien extends Entity{
 				
 			if(chance == 5) {													// if the random number is 5(i.e 1/1000 chance)
 					
-				bomblauncher.addBomb(new Bomb(this.x+15, this.y+20, 5, 8, 8));	// add a bomb to the linked list with position of the alien
+				bomblauncher.addBomb(EntityFactory.createBomb(this.x+15, this.y+20, 5, 8, 8));	// add a bomb to the linked list with position of the alien
 			}
 		}	
 	}

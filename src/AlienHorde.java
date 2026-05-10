@@ -17,17 +17,13 @@ public class AlienHorde {
 	
 	private int	downTrack;										// keeping track of how far down the aliens have traversed for each moving sequence
 	
-	private Image image;										// image to draw on top of the aliens
-	
 	Alien[][] aliens = new Alien[ROWS][COLUMNS];				// matrix holding the alien horde
 	
 	Alien TempAlien;											// temporary alien object
 	
 	// alien horde constructor
 	
-	public AlienHorde(Image image) {
-		
-		this.image = image;										// receiving and image to draw
+	public AlienHorde() {
 		
 		// aliens will start by moving right
 		
@@ -46,7 +42,7 @@ public class AlienHorde {
 			
 			for(int j = 0, y = 60; j < COLUMNS; j++, y+=40) {
 				
-				aliens[i][j] = new Alien(x, y, 1, image);
+				aliens[i][j] = EntityFactory.createAlien(x, y, 1);
 				
 				if (j == COLUMNS - 1) {
 					aliens[i][j].setAggro(true);				// we want to make the aliens from the last row aggressive, meaning they can launch bombs

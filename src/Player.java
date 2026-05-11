@@ -52,6 +52,9 @@ public class Player extends Entity {
 
 	}
 
+	private boolean leftPressed = false;
+	private boolean rightPressed = false;
+
 	// overriding the KeyPressed method from the panel to class to satisfy the
 	// player logic
 
@@ -60,14 +63,48 @@ public class Player extends Entity {
 		switch (e.getKeyCode()) {
 
 			case 37:
-				this.moveLeft();
+				leftPressed = true;
 				break;
 			case 39:
-				this.moveRight();
+				rightPressed = true;
 				break;
 
 		}
 
+	}
+
+	public void keyReleased(KeyEvent e) {
+
+		switch (e.getKeyCode()) {
+
+			case 37:
+				leftPressed = false;
+				break;
+			case 39:
+				rightPressed = false;
+				break;
+
+		}
+
+	}
+
+	public void move() {
+		if (leftPressed) {
+			this.moveLeft();
+		}
+		if (rightPressed) {
+			this.moveRight();
+		}
+	}
+
+	public void setX(int x) {
+		if (x >= (600 - 40)) { // testing if player is in bounds of the panel
+			this.x = 600 - 40;
+		} else if (x <= 5) {
+			this.x = 5;
+		} else {
+			this.x = x;
+		}
 	}
 
 	// iterating through the bomblauncher linked list and checking if player

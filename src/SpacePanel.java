@@ -5,12 +5,15 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 // panel class that inherits panel methods and implements the event key listener class, as well as the runnable class to create a thread
 
-public class SpacePanel extends JPanel implements Runnable, KeyListener, GameObserver{
+public class SpacePanel extends JPanel implements Runnable, KeyListener, GameObserver, MouseListener, MouseMotionListener{
 	
 	private static final int PANEL_WIDTH = 600;											// panel
 	private static final int PANEL_HEIGHT = 700;										// dimensions
@@ -42,6 +45,8 @@ public class SpacePanel extends JPanel implements Runnable, KeyListener, GameObs
 		
 		setSize(PANEL_WIDTH, PANEL_HEIGHT);												// setting the size of the panel
 	    addKeyListener(this);															// adding a key listener
+	    addMouseListener(this);
+	    addMouseMotionListener(this);
 	    setFocusable(true);																// setting focusable to true to receive keyboard input
 	    
 	    backgroundImage = ResourceManager.getInstance().getImage("background");				// getting background image from ResourceManager
@@ -117,6 +122,7 @@ public class SpacePanel extends JPanel implements Runnable, KeyListener, GameObs
 		
 		// calling move methods for every object that requires moving
 		
+		player.move();
 		lasergun.move();
 		alienhorde.move(bomblauncher);
 		bomblauncher.move();
@@ -184,6 +190,8 @@ public class SpacePanel extends JPanel implements Runnable, KeyListener, GameObs
 	}
 
 	public void keyReleased(KeyEvent e) {
+		player.keyReleased(e);
+		
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {								// if released space, shoot
 			
 			lasergun.addLaser(EntityFactory.createLaser(player.x+15, player.y-5, 5, 3, 5));		// add laser to linked list
@@ -207,6 +215,41 @@ public class SpacePanel extends JPanel implements Runnable, KeyListener, GameObs
 	
 	public void setGameOver(boolean gameOver) {
 		this.gameOver = gameOver;
+	}
+	
+	// Mouse Listener and Motion Listener methods
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			lasergun.addLaser(EntityFactory.createLaser(player.x+15, player.y-5, 5, 3, 5));
+		}
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		player.setX(e.getX() - 15);
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		player.setX(e.getX() - 15);
 	}
 
 	// GameObserver methods
